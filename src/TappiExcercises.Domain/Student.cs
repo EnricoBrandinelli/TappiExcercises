@@ -33,13 +33,23 @@ namespace TappiExcercises.Domain
 
         }
 
-        private void GetStudentSubjects()
+        private double GetAverage(string subject)
         {
+            double sum = 0;
+            int counter = 0;
+
             for(int i = 0; i < _grades.Count; i++)
             {
+                if (_grades[i].GetSubject() == subject)
+                {
+                    counter++;
+                    sum = sum + _grades[i].GetValue();
+                }
 
-                _subjects.Add(_grades[i].GetSubject);
             }
+
+
         }
+        
     }
 }
