@@ -6,23 +6,18 @@ using System.Threading.Tasks;
 
 namespace TappiExcercises.Domain
 {
-    public class Student
+    public class Student: Person
     {
 
 
-        private int Id { get; }
-        private string Name { get; }
-        private string Surname { get; }
+       
         private string Class {  get; }
 
         List<Grade> _grades;
         HashSet<String> _subjects;
 
-        public Student(int id, string name, string surname, string c)
-        {
-            Id = id;
-            Name = name;
-            Surname = surname;
+        public Student(int id, string name, string surname, string c):base(id,name,surname)
+        {          
             Class = c;
             _grades = new List<Grade>();
         }
@@ -33,7 +28,10 @@ namespace TappiExcercises.Domain
 
         }
 
-        private double GetAverage(string subject)
+        public override string SayHello() => base.SayHello() + "Ciao prof!!";
+       
+
+        private void GetAverage(string subject)
         {
             double sum = 0;
             int counter = 0;
