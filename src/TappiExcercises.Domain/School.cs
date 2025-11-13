@@ -40,6 +40,13 @@ namespace TappiExcercises.Domain
             //    msg += p.SayHello() + "\n";
             //}
 
+            //Alternativa 2
+            //StringBuilder sb = new StringBuilder();
+            //foreach(Person p in People)
+            //{
+            //    sb.AppendLine(p.SayHello());
+            //}
+            //return sb.ToString();
 
             return msg;
 
