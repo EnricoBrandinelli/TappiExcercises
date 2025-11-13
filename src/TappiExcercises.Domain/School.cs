@@ -52,6 +52,23 @@ namespace TappiExcercises.Domain
 
         }
 
+        public bool AddSubjectByTeacherId(int teacherId, string subject)
+        {
+            bool found = false;
+            foreach(Person p in People)
+            {
+                if(p is Teacher)
+                {
+                    if(p.Id == teacherId)
+                    {
+                        ((Teacher)p).AddSubject(subject);
+                        found = true;
+                    }
+                }
+            }
+            return found;
+        }
+
 
 
 

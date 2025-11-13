@@ -8,7 +8,7 @@ namespace TappiExcercises.Domain
 {
     public class Person
     {
-        private int Id { get; set; }
+        public int Id { get; private set; }
         private string Name { get; set; } = string.Empty;
         private string Surname { get; set; } = string.Empty;
 
@@ -23,6 +23,8 @@ namespace TappiExcercises.Domain
         }
 
         public virtual string SayHello() => "Buongiorno";
+
+        
 
 
 
