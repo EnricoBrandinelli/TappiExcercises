@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TappiExcercises.Domain
+namespace TappiExcercises.Domain.School
 {
     public class Student: Person
     {
@@ -14,7 +14,7 @@ namespace TappiExcercises.Domain
         private string Class {  get; }
 
         List<Grade> _grades;
-        HashSet<String> _subjects;
+        HashSet<string> _subjects;
 
         public Student(int id, string name, string surname, string c):base(id,name,surname)
         {          

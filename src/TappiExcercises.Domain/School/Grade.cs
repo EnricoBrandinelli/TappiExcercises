@@ -1,4 +1,4 @@
-﻿namespace TappiExcercises.Domain
+﻿namespace TappiExcercises.Domain.School
 {
     public class Grade
     {

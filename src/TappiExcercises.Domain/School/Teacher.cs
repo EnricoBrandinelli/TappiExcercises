@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TappiExcercises.Domain
+namespace TappiExcercises.Domain.School
 {
     public class Teacher : Person
     {
