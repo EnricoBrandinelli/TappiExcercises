@@ -64,18 +64,31 @@ namespace TappiExcercises.Domain.Matrix
 
         private void GetHoles(CourseName[,] lab)
         {
-            int count = 0;
+            List<int> count = new List<int> ();
+            int counts = 0;
+
             for(int r = 0; r<lab.GetLength(0); r++)
             {
                 for(int i = 0; i<lab.GetLength(1); i++)
-                {                  
+                {
                     if (lab[r, i] == CourseName.Available)
-                        count++;
+                        counts++;
                     else
-                        if (count != 0)                        
-                        count = 0;
+                    {
+                        if (counts != 0)
+                            count.Add(counts);
 
-                    
+                        counts = 0;
+                    }                                           
+                }
+                Holes[r] = new Hole[count.Count];
+            }
+
+            for(int k = 0; k<Holes.GetLength(0); k++)
+            {
+                for(int u=0;u<Holes.GetLength(1);u++)
+                {
+                    Holes[k][u] = new Hole()
                 }
             }
         }
