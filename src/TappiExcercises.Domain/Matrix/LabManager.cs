@@ -62,35 +62,79 @@ namespace TappiExcercises.Domain.Matrix
             return bookingFound;
         }
 
+        public void RegisterBooking(Booking booking)
+        {
+            bool availability = CheckBookingAvailability(booking);
+            if (availability == false)
+                throw new ArgumentException("There is no availability for your booking");
+
+            int startindex = FromHourToIndex(booking.StartTime.Hour);
+            int endindex = startindex + booking.Duration;
+            int dayindex = GetDayIndex(booking.DayOfWeek);
+
+            bool flag = false;
+            bool reservationmade = true;
+            for(int i = startindex; i<=endindex || !flag; i++)
+            {
+                endindex = i + booking.Duration;
+
+                for(int a = i; a<=endindex;a++)
+                {
+                    if (Bookings[dayindex, a] != CourseName.Available)
+                        reservationmade = false;                   
+                }
+
+                if(reservationmade)
+                {
+                    while(i<=endindex)
+                    {
+                        Bookings[dayindex, i] = booking.CourseName;
+                    }
+                    flag = true;
+                }
+
+            }
+        }
+
         private void GetHoles(CourseName[,] lab)
         {
-            List<int> count = new List<int> ();
-            int counts = 0;
+            List<int> counts = new List<int>();
+            List<int> indexes = new List<int>();
+            int count = 0;
 
             for(int r = 0; r<lab.GetLength(0); r++)
             {
+                count = 0;
+                counts.Clear();
+                indexes.Clear();
                 for(int i = 0; i<lab.GetLength(1); i++)
                 {
                     if (lab[r, i] == CourseName.Available)
-                        counts++;
+                    {
+                        if (count == 0)
+                            indexes.Add(i);
+
+                        count++;                       
+                    }                        
                     else
                     {
-                        if (counts != 0)
-                            count.Add(counts);
+                        if (count != 0)
+                            counts.Add(count);
 
-                        counts = 0;
+                        count = 0;
                     }                                           
                 }
-                Holes[r] = new Hole[count.Count];
-            }
 
-            for(int k = 0; k<Holes.GetLength(0); k++)
-            {
-                for(int u=0;u<Holes.GetLength(1);u++)
+                if (count != 0)
+                    counts.Add(count);
+
+                Holes[r] = new Hole[counts.Count];
+
+                for(int i = 0; i < Holes[r].GetLength(1); i++)
                 {
-                    Holes[k][u] = new Hole()
+                    Holes[r][i] = new Hole(counts[i], indexes[i]);
                 }
-            }
+            }           
         }
 
 
