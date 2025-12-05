@@ -89,6 +89,7 @@ namespace TappiExcercises.Domain.Matrix
                     while(i<=endindex)
                     {
                         Bookings[dayindex, i] = booking.CourseName;
+                        i++;
                     }
                     flag = true;
                 }
