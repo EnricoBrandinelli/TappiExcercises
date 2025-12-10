@@ -25,18 +25,18 @@ namespace TappiExcercises.Domain.Matrix
             Bookings = new CourseName[openingDays.Length, TotalSlots];
             Holes = new Hole[OpeningDays.Length][];
         }
-        public bool CheckBookingAvailability(Booking newBooking)
+        public int CheckBookingAvailability(Booking newBooking)
         {
             int dayIndex = GetDayIndex(newBooking.DayOfWeek);
             if (dayIndex == -1)
-                return false;
+                return -1;
 
             int requestedDurationSlots = newBooking.Duration;
             int minStartSlotIndex = FromHourToIndex(newBooking.StartTime.Hour);
             int maxStartSlotIndex = TotalSlots - requestedDurationSlots;
 
             if (minStartSlotIndex >= TotalSlots || maxStartSlotIndex < 0)
-                return false;
+                return -1;
 
             int startCandidate = minStartSlotIndex;
             bool bookingFound = false;
@@ -44,7 +44,7 @@ namespace TappiExcercises.Domain.Matrix
             {
                 bool isSlotAvailable = true;
                 int currentSlotIndex = startCandidate;
-                while (currentSlotIndex < currentSlotIndex + requestedDurationSlots && isSlotAvailable)
+                while (currentSlotIndex < startCandidate + requestedDurationSlots && isSlotAvailable)
                 {
                     if (Bookings[dayIndex, currentSlotIndex] != CourseName.Available)
                     {
@@ -59,41 +59,73 @@ namespace TappiExcercises.Domain.Matrix
                 else
                     bookingFound = true;
             }
-            return bookingFound;
+            if (bookingFound)
+                return startCandidate;
+            else
+                return -1;
         }
 
         public void RegisterBooking(Booking booking)
         {
-            bool availability = CheckBookingAvailability(booking);
-            if (availability == false)
-                throw new ArgumentException("There is no availability for your booking");
-
-            int startindex = FromHourToIndex(booking.StartTime.Hour);
-            int endindex = startindex + booking.Duration;
             int dayindex = GetDayIndex(booking.DayOfWeek);
-
-            bool flag = false;
-            bool reservationmade = true;
-            for(int i = startindex; i<=endindex || !flag; i++)
+            int availability = CheckBookingAvailability(booking);
+            if(availability != -1)
             {
-                endindex = i + booking.Duration;
-
-                for(int a = i; a<=endindex;a++)
+                for(int i = availability; i<availability+booking.Duration; i++)
                 {
-                    if (Bookings[dayindex, a] != CourseName.Available)
-                        reservationmade = false;                   
+                    Bookings[dayindex, i] = booking.CourseName;
                 }
+            }
+                
+        }
 
-                if(reservationmade)
+        private void SmartRegister(int StartIndex, int row, int Duration,  CourseName coursename)
+        {
+            for(int i = StartIndex; i<StartIndex+Duration; i++)
+            {
+                Bookings[row, i] = coursename;
+            }
+        }
+
+        public void SmartBooking(Booking booking)
+        {
+            int availabity = CheckBookingAvailability(booking);
+            if(availabity != -1)
+            {
+                int offset = 0;
+                int row = 0;
+                int count = 0;
+                bool flag = true;
+                foreach (Hole[] hole in Holes)
                 {
-                    while(i<=endindex)
+                    foreach(Hole h in hole)
                     {
-                        Bookings[dayindex, i] = booking.CourseName;
-                        i++;
+                        if(h.Lenght == booking.Duration)
+                        {
+                            SmartRegister(h.OffSet, h.Row, booking.Duration,  booking.CourseName);
+                            flag = false;
+                            break;
+                        }
+
+                        if (count == 0 && h.Lenght > booking.Duration)
+                        {
+                            offset = h.OffSet;
+                            row = h.Row;
+                            count++;
+                        }
+                        else if (count != 0 && h.Lenght > booking.Duration && h.Lenght < count)
+                        {
+                            offset = h.OffSet;
+                            row = h.Row;
+                        }
                     }
-                    flag = true;
+
+                    if (!flag)
+                        break;
                 }
 
+                if(flag)
+                    SmartRegister(offset, row, booking.Duration,  booking.CourseName);
             }
         }
 
@@ -133,7 +165,7 @@ namespace TappiExcercises.Domain.Matrix
 
                 for(int i = 0; i < Holes[r].GetLength(1); i++)
                 {
-                    Holes[r][i] = new Hole(counts[i], indexes[i]);
+                    Holes[r][i] = new Hole(counts[i], indexes[i], r);
                 }
             }           
         }

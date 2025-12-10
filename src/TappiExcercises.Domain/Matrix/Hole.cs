@@ -10,11 +10,13 @@ namespace TappiExcercises.Domain.Matrix
     {
         public int Lenght { get; private set; }
         public int OffSet { get; private set; }
+        public int Row { get; private set; }
 
-        public Hole(int lenght, int offset)
+        public Hole(int lenght, int offset, int row)
         {
             Lenght = lenght;
             OffSet = offset;
+            Row = row;
         }
     }
 }
