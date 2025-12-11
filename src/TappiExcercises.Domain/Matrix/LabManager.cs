@@ -15,6 +15,8 @@ namespace TappiExcercises.Domain.Matrix
         public CourseName[,] Bookings { get; private set; }
         public Hole[][] Holes { get; private set; }
 
+        enum Status { Booking, Hole }
+
         public LabManager(TimeOnly startTime, TimeOnly endTime, DayOfWeek[] openingDays)
         {
             if (startTime >= endTime) throw new ArgumentException("Start time must be before end time.");
@@ -111,9 +113,9 @@ namespace TappiExcercises.Domain.Matrix
                         {
                             offset = h.OffSet;
                             row = h.Row;
-                            count++;
+                            count = h.Lenght;
                         }
-                        else if (count != 0 && h.Lenght > booking.Duration && h.Lenght < count)
+                        else if (count != 0 && h.Lenght > booking.Duration && h.Lenght > count)
                         {
                             offset = h.OffSet;
                             row = h.Row;
@@ -126,7 +128,15 @@ namespace TappiExcercises.Domain.Matrix
 
                 if(flag)
                     SmartRegister(offset, row, booking.Duration,  booking.CourseName);
+
+                if (offset == 0)
+                    throw new ArgumentException("There was no hole where the booking could fit");
             }
+        }
+
+        public bool SmartBooking2(Booking booking)
+        {
+            return false;
         }
 
         private void GetHoles(CourseName[,] lab)
@@ -134,28 +144,43 @@ namespace TappiExcercises.Domain.Matrix
             List<int> counts = new List<int>();
             List<int> indexes = new List<int>();
             int count = 0;
+            Status status = Status.Booking; 
 
             for(int r = 0; r<lab.GetLength(0); r++)
             {
                 count = 0;
                 counts.Clear();
                 indexes.Clear();
+                status = Status.Booking;
                 for(int i = 0; i<lab.GetLength(1); i++)
                 {
-                    if (lab[r, i] == CourseName.Available)
-                    {
-                        if (count == 0)
-                            indexes.Add(i);
+                   switch (status)
+                   {
+                        case Status.Booking:
 
-                        count++;                       
-                    }                        
-                    else
-                    {
-                        if (count != 0)
-                            counts.Add(count);
+                            if (lab[r,i] == CourseName.Available)
+                            {
+                                indexes.Add(i);
+                                count++;
+                                status = Status.Hole;
+                            }
+                            else { }
+                            break;
+                        case Status.Hole:
 
-                        count = 0;
-                    }                                           
+                            if (lab[r,i] == CourseName.Available)
+                            {
+                                count++;
+                            }
+                            else
+                            {
+                                status = Status.Booking;
+                            }
+                            break;
+                        default:
+                            throw new ArgumentException("There is a problem");
+
+                   }
                 }
 
                 if (count != 0)
