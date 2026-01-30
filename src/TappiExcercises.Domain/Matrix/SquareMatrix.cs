@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TappiExcercises.Domain.Matrix
 {
-    public class SquareMatrix : MatrixPorcoschifo
+    public class SquareMatrix : Maatrix
     {
         public SquareMatrix(int dimension) : base(dimension, dimension)
         { }
@@ -87,7 +87,7 @@ namespace TappiExcercises.Domain.Matrix
             return new SquareMatrix(result);
         }
 
-        public SquareMatrix ChangeColumn(SquareMatrix matrix, MatrixPorcoschifo column, int offset)
+        public SquareMatrix ChangeColumn(SquareMatrix matrix, Maatrix column, int offset)
         {
             for(int r=0; r<matrix.Rows;r++)
             {
@@ -97,7 +97,7 @@ namespace TappiExcercises.Domain.Matrix
             return matrix;
         }
 
-        public double?[] FindXes(SquareMatrix matrix, MatrixPorcoschifo coefficients)
+        public double?[] FindXes(SquareMatrix matrix, Maatrix coefficients)
         {
             double? fixeddet = Determinant(matrix);
             double? idet;

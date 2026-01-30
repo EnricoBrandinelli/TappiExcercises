@@ -8,7 +8,7 @@ namespace TappiExcercises.Domain.UnitTest
         [Fact]
         public void Test1()
         {
-            MatrixPorcoschifo coefficients = new MatrixPorcoschifo(3, 1);
+            Maatrix coefficients = new Maatrix(3, 1);
             coefficients[0, 0] = 7;
             coefficients[1, 0] = 0;
             coefficients[2, 0] = 1;
