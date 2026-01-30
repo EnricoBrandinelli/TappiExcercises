@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace TappiExcercises.Domain.Matrix
 {
-    internal class SquareMatrix : Matrix
+    public class SquareMatrix : MatrixPorcoschifo
     {
         public SquareMatrix(int dimension) : base(dimension, dimension)
         { }
 
-        public SquareMatrix(double[] original) : base((int)Math.Sqrt(original.Length), (int)Math.Sqrt(original.Length))
+        public SquareMatrix(double?[] original) : base((int)Math.Sqrt(original.Length), (int)Math.Sqrt(original.Length))
         {
             int end = vector.Length;
             for (int i = 0; i < end; i++)
@@ -58,7 +58,7 @@ namespace TappiExcercises.Domain.Matrix
             return result;
         }
 
-        public SquareMatrix SubMatrix(SquareMatrix? matrix, int row, int col)
+        public SquareMatrix? SubMatrix(SquareMatrix? matrix, int row, int col)
         {
             // Restituisce la Sottomatrice della matrice 'matrix' eliminando la riga 'row' e la colonna 'col'.
             //
@@ -72,21 +72,50 @@ namespace TappiExcercises.Domain.Matrix
             {
                 matrix[row, c] = null;
             }
-
             for (int r = 0; r < Rows; r++)
             {
                 matrix[r, col] = null;
             }
-
-            SquareMatrix result = new SquareMatrix(matrix.Rows - 1);
-
-            for(int r=0;r<matrix.Rows;r++)
+            double?[] result = new double?[0];           
+            foreach(double d in matrix.vector)
             {
-                for(int c=0;c<matrix.Columns;c++)
+                if(d != null)
                 {
-                    if(r >= matrix.Rows ||)
+                    result.Append(d);
                 }
             }
+            return new SquareMatrix(result);
+        }
+
+        public SquareMatrix ChangeColumn(SquareMatrix matrix, MatrixPorcoschifo column, int offset)
+        {
+            for(int r=0; r<matrix.Rows;r++)
+            {
+                matrix[r, offset] = column[r, 0];
+            }
+
+            return matrix;
+        }
+
+        public double?[] FindXes(SquareMatrix matrix, MatrixPorcoschifo coefficients)
+        {
+            double? fixeddet = Determinant(matrix);
+            double? idet;
+            double?[] result = new double?[0];
+            SquareMatrix changedmatrix;
+            if(fixeddet == 0)
+            {
+                throw new ArgumentException("The sistem isn't determined");
+            }
+
+            for(int i = 0; i<matrix.Columns; i++)
+            {
+                changedmatrix = ChangeColumn(matrix, coefficients, i);
+                idet = Determinant(changedmatrix);
+                result.Append(idet / fixeddet);
+            }
+
+            return result;
         }
     }
 }

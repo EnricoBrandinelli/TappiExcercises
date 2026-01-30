@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace TappiExcercises.Domain.Matrix
 {
-    internal class Matrix
+    public class MatrixPorcoschifo
     {
         protected double?[] vector;
         private int rows, columns;
 
-        public Matrix(int numRows, int numColumns)
+        public MatrixPorcoschifo(int numRows, int numColumns)
         {
             rows = Math.Abs(numRows);
             columns = Math.Abs(numColumns);

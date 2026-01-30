@@ -35,25 +35,6 @@ namespace TappiExcercises.Domain.sudoku
                 return false;
         }
 
-        public bool IsSudoku(int[,] matrix)
-        {
-            List<int> check = new List<int>();
-            
-            for(int r = 0; r<matrix.GetLength(0); r++)
-            {
-                for(int c = 0; c<matrix.GetLength(1); c++)
-                {
-                    foreach(int i in check)
-                    {
-                        if (matrix[r,c] == i)
-                        {
-                            check.Remove(i);
-                            break;
-                        }
-                    }
-                }
-
-            }
-        }
+       
     }
 }
